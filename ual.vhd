@@ -21,25 +21,30 @@ entity ual is
 end ual;
 
 architecture Behavioral of ual is
-	
+	signal TMP_S : STD_LOGIC_VECTOR (15 downto 0);
+	signal TMP_A : STD_LOGIC_VECTOR (15 downto 0);
+	signal TMP_B : STD_LOGIC_VECTOR (15 downto 0);
 begin
-	
-	with Ctrl_ALU select S <= 
-		A + B when "001",
-	  "00000000" when others;
-	  
---	if (Ctrl_ALU = "001") then 
---		S <= A + B;
---		N <= '0';
---		O <= '0';
---		Z <= '0';
---		C <= '0';
---	else 
---		S <= x"FF";
---		N <= '1';
---		O <= '1';
---		Z <= '1';
---		C <= '1';
---	end if;	
 
+	TMP_A(7 downto 0) <= A;
+	TMP_A(15 downto 8) <= "00000000";
+	TMP_B(7 downto 0) <= B;
+	TMP_B(15 downto 8) <= "00000000";
+	
+	with Ctrl_ALU select TMP_S <=
+		TMP_A + TMP_B when "001",
+		TMP_A - TMP_B when "011",
+		A * B when "010",
+		CONV_STD_LOGIC_VECTOR(CONV_INTEGER(TMP_A) / CONV_INTEGER(TMP_B), 16) when "100",
+	  "0000000000000000" when others;
+	  
+	  S <= TMP_S(7 downto 0);
+	  N <= TMP_S(7);
+	  with TMP_S select Z <=
+		'1' when "0000000000000000",
+		'0' when others;
+	  with TMP_S(15 downto 8) select O <=
+		'0' when "00000000",
+		'1' when others;	
+	  C <= TMP_S(8);
 end Behavioral;

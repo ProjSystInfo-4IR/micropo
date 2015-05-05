@@ -64,10 +64,6 @@ ARCHITECTURE behavior OF test_ual IS
    signal Z : std_logic;
    signal C : std_logic;
    signal S : std_logic_vector(7 downto 0);
-   -- No clocks detected in port list. Replace <clock> below with 
-   -- appropriate port name 
---	signal clock : std_logic;
---   constant clock_period : time := 10 ns;
  
 BEGIN
  
@@ -82,32 +78,15 @@ BEGIN
           C => C,
           S => S
         );
-
-   -- Clock process definitions
---   clock_process :process
---   begin
---		clock <= '0';
---		wait for clock_period/2;
---		clock <= '1';
---		wait for clock_period/2;
---   end process;
--- 
---
---   -- Stimulus process
---   stim_proc: process
---   begin		
---      -- hold reset state for 100 ns.
---      wait for 100 ns;	
---
---      wait for clock_period*10;
---
---      -- insert stimulus here 
---
---     wait;
---   end process;
-	
-	 A <= "00000001" after 350ns;
-	 B <= "00000001" after 700ns;
-	 Ctrl_ALU <= "000" after 100ns, "001" after 600ns;
+	 
+	 -- Test A + B
+	 A <= "00000001" after 10ns, "11111111" after 20ns, "000000000" after 40ns, 
+		   "00000001" after 50ns, "11111111" after 60ns, "000000000" after 70ns, 
+		   "00000001" after 80ns, "11111111" after 90ns, "00000011" after 100ns,
+			"00000110" after 110ns;
+	 B <= "00000001",  
+			"11111111" after 85ns, 
+			"00000011" after 95ns, "00000000" after 120ns;
+	 Ctrl_ALU <= "001" after 5ns, "011" after 45ns, "010" after 75ns, "100" after 105ns;
 
 END;
