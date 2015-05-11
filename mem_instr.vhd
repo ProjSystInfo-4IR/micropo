@@ -24,8 +24,7 @@ architecture Behavioral of mem_instr is
 type MEM_TAB is array(255 downto 0) of STD_LOGIC_VECTOR(31 downto 0);
 
 signal N : STD_LOGIC_VECTOR(31 downto 0);
-signal MEM : MEM_TAB := (1 => "01011010000000000000000000000000",
-								others => "00000000000000000000000000000000");	
+signal MEM : MEM_TAB := (others => "00000000000000000000000000000000");	
 begin
 	process 
 	begin
