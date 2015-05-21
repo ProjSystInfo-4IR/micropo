@@ -14,7 +14,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity lc_mem is
 	Port (
 			OPin : in STD_LOGIC_VECTOR(3 downto 0);
-			OPout : out STD_LOGIC;
+			OPout : out STD_LOGIC
 			
 		);
 end lc_mem;

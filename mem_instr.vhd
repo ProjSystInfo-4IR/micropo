@@ -21,10 +21,14 @@ end mem_instr;
 architecture Behavioral of mem_instr is
 
 --type INDEX1 is INTEGER range 0 to 255;
-type MEM_TAB is array(255 downto 0) of STD_LOGIC_VECTOR(31 downto 0);
+type MEM_TAB is array(31 downto 0) of STD_LOGIC_VECTOR(31 downto 0);
 
 signal N : STD_LOGIC_VECTOR(31 downto 0);
-signal MEM : MEM_TAB := (others => "00000000000000000000000000000000");	
+signal MEM : MEM_TAB := (1 => x"06020300", -- AFC 2 3  
+								 2 => x"08030F00", -- STORE 3 F	
+								 3 => x"06000400", -- AFC 0 4
+								 4 => x"06080200", -- COP 8 2									 
+						  others => x"00000000");	
 begin
 	process 
 	begin
@@ -32,7 +36,6 @@ begin
 		N <= MEM(CONV_INTEGER(ADDR));
 	end process;
 	VALUE_OUT <= N;
-	--MEM(0) <= "01011010000000000000000000000000";
 
 end Behavioral;
 
