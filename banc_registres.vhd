@@ -19,8 +19,6 @@ end banc_registres;
 
 architecture Behavioral of banc_registres is
 type MEM_REG is array(15 downto 0) of STD_LOGIC_VECTOR(7 downto 0);
-	signal NA : STD_LOGIC_VECTOR(7 downto 0);
-	signal NB : STD_LOGIC_VECTOR(7 downto 0);
 	signal BANC_REGISTRES : MEM_REG := (8 => "11111111", 
 													2 => "10101010",
 													others => "00000000");	
@@ -28,6 +26,7 @@ begin
 	process 
 	begin
 		wait until CLK'event and CLK = '1';
+		-- domaine synchrone
 		if (RST = '0') then 
 			-- remettre le contenu de la mémoire en 0x00
 			BANC_REGISTRES <= (others => x"00"); 
@@ -37,12 +36,15 @@ begin
 				BANC_REGISTRES(CONV_INTEGER(ADDR_W)) <= DATA;
 			end if;
 		end if;
-		-- mode lecture
-		NA <= BANC_REGISTRES(CONV_INTEGER(ADDR_A));
-		NB <= BANC_REGISTRES(CONV_INTEGER(ADDR_B));
 	end process;
-	QA <= NA;
-	QB <= NB;
-
+	
+	-- domaine asynchrone
+	
+	-- mode lecture - bypass D -> Q
+	QA <= DATA when (W = '1' and ADDR_A = ADDR_W) else 
+			BANC_REGISTRES(CONV_INTEGER(ADDR_A))
+			;
+	QB <= DATA when (W = '1' and ADDR_B = ADDR_W) else 
+			BANC_REGISTRES(CONV_INTEGER(ADDR_B));
 end Behavioral;
 
