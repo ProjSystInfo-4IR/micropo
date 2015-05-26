@@ -19,9 +19,8 @@ entity mem_donnees is
 end mem_donnees;
 
 architecture Behavioral of mem_donnees is
-	type MEM_TAB is array(255 downto 0) of STD_LOGIC_VECTOR(7 downto 0);
-	signal N : STD_LOGIC_VECTOR(7 downto 0);
-	signal MEM_DONNEES : MEM_TAB := (others => "00000000");	
+	type MEM_TAB is array(32 downto 0) of STD_LOGIC_VECTOR(7 downto 0);
+	signal MEM_DONNEES : MEM_TAB := (1 => x"FA", others => "00000000");	
 begin
 	process 
 	begin
@@ -31,15 +30,14 @@ begin
 			MEM_DONNEES <= (others => x"00"); 
 		else
 			if RW = '0' then
-				-- mode écriture
-				MEM_DONNEES(CONV_INTEGER(ADDR)) <= VALUE_IN;
-			else 
-				-- mode lecture
-				N <= MEM_DONNEES(CONV_INTEGER(ADDR));
+				-- mode écriture synchrone
+				MEM_DONNEES(CONV_INTEGER(ADDR)) <= VALUE_IN;			
 			end if;
 		end if;
 	end process;
-	VALUE_OUT <= N;
+	-- mode lecture asynchrone
+	VALUE_OUT <= MEM_DONNEES(CONV_INTEGER(ADDR)) when RW = '1' else x"10";
+
 
 end Behavioral;
 

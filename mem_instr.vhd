@@ -24,10 +24,15 @@ architecture Behavioral of mem_instr is
 type MEM_TAB is array(31 downto 0) of STD_LOGIC_VECTOR(31 downto 0);
 
 signal N : STD_LOGIC_VECTOR(31 downto 0);
-signal MEM : MEM_TAB := (1 => x"06020300", -- AFC 2 3  
-								 2 => x"08030F00", -- STORE 3 F	
-								 3 => x"06000400", -- AFC 0 4
-								 4 => x"06080200", -- COP 8 2									 
+signal MEM : MEM_TAB := (--0 => x"06010200",  -- AFC 1 2
+								-- cas écriture et lecture simultané
+								 --3 => x"05020100",  -- COP 2 1
+								 --4 => x"06030200",  -- AFC 3 2
+								 --6 => x"01040102",  -- ADD 4 1 2
+								 --7 => x"03050802",  -- SOU 5 8 2
+								 --10 => x"02060304", -- MUL 6 3 4
+								 --11 => x"04070804", -- DIV 7 8 3,
+								 12 => x"07090100", -- LOAD 9 1
 						  others => x"00000000");	
 begin
 	process 

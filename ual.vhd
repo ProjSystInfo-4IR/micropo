@@ -36,7 +36,7 @@ begin
 		TMP_A - TMP_B when "011",
 		A * B when "010",
 		CONV_STD_LOGIC_VECTOR(CONV_INTEGER(TMP_A) / CONV_INTEGER(TMP_B), 16) when "100",
-	  "0000000000000000" when others;
+		TMP_A when others;
 	  
 	  S <= TMP_S(7 downto 0);
 	  N <= TMP_S(7);

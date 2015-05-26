@@ -15,6 +15,7 @@ architecture Behavioral of mux_banc_reg is
 begin
 with OPin select Bout <=
 	  Bin  when x"06",
+	  Bin  when x"07",
 	  Qin	 when others;
 
 end Behavioral;
