@@ -137,6 +137,15 @@ architecture Structural of micropo is
 			);
 	end component;
 	
+	component mux_mem_donnees_in is
+	port ( 
+		Ain : in STD_LOGIC_VECTOR(7 downto 0);
+		Bin : in STD_LOGIC_VECTOR(7 downto 0);
+		OPin : in STD_LOGIC_VECTOR(7 downto 0);
+		Bout : out STD_LOGIC_VECTOR(7 downto 0)
+	);
+	end component;
+	
 	component lc_mem is
 		port (
 			OPin : in STD_LOGIC_VECTOR(7 downto 0);
@@ -162,6 +171,7 @@ architecture Structural of micropo is
 		Bout : out STD_LOGIC_VECTOR(7 downto 0)
 	);
 	end component;
+
 	
 	type ppl_io is 
 	record 
@@ -187,6 +197,7 @@ architecture Structural of micropo is
 	signal mux_banc_ual_b_out : std_logic_vector(7 downto 0);
 	signal mem_donnees_rw_in : std_logic;
 	signal mem_donnees_value_out : std_logic_vector(7 downto 0);
+	signal mem_donnees_addr : std_logic_vector(7 downto 0);
 	signal mux_mem_donnees_b_out : std_logic_vector(7 downto 0);
 begin
 	comp_ip : ip port map(instr_ptr_out, CLK);
@@ -288,7 +299,7 @@ begin
 	
 	comp_mem_donnees : mem_donnees port map 
 	(
-		ADDR => ppl_ex_mem_out.B,
+		ADDR => mem_donnees_addr,
 		CLK => CLK,
 		RW => mem_donnees_rw_in,
 		RST => '0',
@@ -301,6 +312,14 @@ begin
 		MEMin => mem_donnees_value_out,
 		OPin => ppl_ex_mem_out.OP,
 		Bout => mux_mem_donnees_b_out
+	);
+	
+	comp_mux_mem_donnees_in : mux_mem_donnees_in port map
+	(
+		Ain => ppl_ex_mem_out.A,
+		Bin => ppl_ex_mem_out.B,
+		OPin => ppl_ex_mem_out.OP,
+		Bout => mem_donnees_addr
 	);
 end Structural;
 
