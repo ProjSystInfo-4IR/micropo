@@ -17,7 +17,7 @@ ARCHITECTURE behavior OF test_micropo IS
 
    --Inputs
    signal CLK : std_logic := '0';
-	constant period : time := 100 ns;
+	constant period : time := 10 ns;
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)

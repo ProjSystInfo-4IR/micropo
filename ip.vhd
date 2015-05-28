@@ -12,7 +12,8 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity ip is
 	Port (
 		INSTR_PTR : out STD_LOGIC_VECTOR(7 downto 0);
-		CLK : in STD_LOGIC
+		CLK : in STD_LOGIC;
+		ENABLE : in STD_LOGIC
 		);
 end ip;
 
@@ -23,7 +24,11 @@ begin
 	process
 	begin
 		wait until CLK'event and CLK = '1';
-		TMP <= TMP + CONV_STD_LOGIC_VECTOR(1, 8);
+		if (ENABLE = '1') then
+			TMP <= TMP + CONV_STD_LOGIC_VECTOR(1, 8);
+		else 
+			TMP <= TMP;
+		end if;
 	end process;
 	INSTR_PTR <= TMP;
 end Behavioral;

@@ -38,7 +38,8 @@ architecture Structural of micropo is
 	component ip 
 		port (
 			INSTR_PTR : out STD_LOGIC_VECTOR(7 downto 0);
-			CLK : in STD_LOGIC
+			CLK : in STD_LOGIC;
+			ENABLE : in STD_LOGIC
 			);
 	end component;
 	
@@ -52,7 +53,8 @@ architecture Structural of micropo is
 	component mem_instr
 		port ( ADDR : in  STD_LOGIC_VECTOR (7 downto 0);
            CLK : in  STD_LOGIC;
-           VALUE_OUT : out STD_LOGIC_VECTOR (31 downto 0)
+           VALUE_OUT : out STD_LOGIC_VECTOR (31 downto 0);
+			  ENABLE : in STD_LOGIC
 			  );
 	end component;
 	
@@ -171,6 +173,21 @@ architecture Structural of micropo is
 		Bout : out STD_LOGIC_VECTOR(7 downto 0)
 	);
 	end component;
+	
+	component controleur_aleas is
+	port 
+	(
+		li_di_OP : in std_logic_vector(7 downto 0);
+		li_di_B : in std_logic_vector(7 downto 0);
+		li_di_C : in std_logic_vector(7 downto 0);
+		li_di_in_OP : out std_logic_vector(7 downto 0);
+		di_ex_in_OP : in std_logic_vector(7 downto 0);
+		di_ex_in_A : in std_logic_vector(7 downto 0);
+		ex_mem_OP : in std_logic_vector(7 downto 0);
+		ex_mem_A : in std_logic_vector(7 downto 0);
+		enable : out std_logic
+	);
+	end component;
 
 	
 	type ppl_io is 
@@ -199,14 +216,29 @@ architecture Structural of micropo is
 	signal mem_donnees_value_out : std_logic_vector(7 downto 0);
 	signal mem_donnees_addr : std_logic_vector(7 downto 0);
 	signal mux_mem_donnees_b_out : std_logic_vector(7 downto 0);
-begin
-	comp_ip : ip port map(instr_ptr_out, CLK);
+	signal ppl_li_di_in_OP : std_logic_vector(7 downto 0);
 	
-	comp_mem_instr : mem_instr port map (instr_ptr_out, CLK, mem_instr_out);
+	-- signal de gestion l'execution du code (gestion incrémentation de ip)
+	signal enable : std_logic := '1';
+begin
+	comp_ip : ip port map
+	(
+		INSTR_PTR => instr_ptr_out, 
+		CLK => CLK,
+		ENABLE => enable
+	);
+	
+	comp_mem_instr : mem_instr port map 
+	(
+		ADDR => instr_ptr_out, 
+		CLK => CLK, 
+		VALUE_OUT => mem_instr_out,
+		ENABLE => enable
+	);
 	
 	comp_ppl_li_di : ppl_li_di port map 
 		(Ain => mem_instr_out(23 downto 16),
-		 OPin => mem_instr_out(31 downto 24), 
+		 OPin => ppl_li_di_in_OP, 
 		 Bin => mem_instr_out(15 downto 8),
 		 Cin =>  mem_instr_out(7 downto 0),
 		 Aout => ppl_li_di_out.A,
@@ -320,6 +352,19 @@ begin
 		Bin => ppl_ex_mem_out.B,
 		OPin => ppl_ex_mem_out.OP,
 		Bout => mem_donnees_addr
+	);
+	
+	comp_controleur_aleas : controleur_aleas port map
+	(
+		li_di_OP =>  mem_instr_out(31 downto 24), 
+		li_di_B =>  mem_instr_out(15 downto 8), 
+		li_di_C =>  mem_instr_out(7 downto 0), 
+		li_di_in_OP => ppl_li_di_in_OP,
+		di_ex_in_OP => ppl_li_di_out.OP,
+		di_ex_in_A => ppl_li_di_out.A,
+		ex_mem_OP => ppl_di_ex_out.OP,
+		ex_mem_A => ppl_di_ex_out.A,
+		enable => enable
 	);
 end Structural;
 
