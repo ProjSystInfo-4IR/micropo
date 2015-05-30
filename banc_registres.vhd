@@ -19,9 +19,7 @@ end banc_registres;
 
 architecture Behavioral of banc_registres is
 type MEM_REG is array(15 downto 0) of STD_LOGIC_VECTOR(7 downto 0);
-	signal BANC_REGISTRES : MEM_REG := (8 => "11111111", 
-													2 => "10101010",
-													others => "00000000");	
+	signal BANC_REGISTRES : MEM_REG := (others => "00000000");	
 begin
 	process 
 	begin

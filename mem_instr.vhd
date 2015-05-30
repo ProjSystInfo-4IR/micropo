@@ -26,21 +26,22 @@ architecture Behavioral of mem_instr is
 type MEM_TAB is array(31 downto 0) of STD_LOGIC_VECTOR(31 downto 0);
 
 signal N : STD_LOGIC_VECTOR(31 downto 0);
-signal MEM : MEM_TAB := (-- test aléas
-                         --0 => x"06010200",  -- AFC 1 2
-								 --1 => x"05020100",  -- COP 2 1
-								 --2 => x"06030200",  -- AFC 3 2
-								 --6 => x"01040102",  -- ADD 4 1 2
-								 --7 => x"03050802",  -- SOU 5 8 2
-								 --10 => x"02060304", -- MUL 6 3 4
-								 --11 => x"04070804", -- DIV 7 8 3,
-								 --12 => x"07090100", -- LOAD 9 1,
-								 --13 => x"08010200",   -- STR 1 2  
-								 14 => x"060A0500",
-								 15 => x"060B0800",
-								 16 => x"010C0A0B",
-								   
-						  others => x"00000000");	
+signal MEM : MEM_TAB := 
+	(
+		0 => x"06010200",   -- AFC  1  2
+		1 => x"05020100",   -- COP  2  1
+		2 => x"06030100",   -- AFC  3  1
+		3 => x"01040102",   -- ADD  4  1  2
+		4 => x"03050403",   -- SOU  5  4  3
+		5 => x"02060405",   -- MUL  6  4 5
+		6 => x"04070602",   -- DIV  7  6 2 
+		7 => x"08020700",   -- STR  2  7
+		8 => x"07090200",   -- LOAD 9  2    
+		9 => x"060A0500",   -- AFC  10 5
+		10 => x"060B0800",  -- AFC  11 8
+		11 => x"010C0A0B",  -- ADD  12 10 11		   
+		others => x"00000000"
+	);	
 begin
 	process 
 	begin

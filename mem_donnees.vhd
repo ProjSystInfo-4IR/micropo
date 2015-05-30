@@ -20,7 +20,7 @@ end mem_donnees;
 
 architecture Behavioral of mem_donnees is
 	type MEM_TAB is array(32 downto 0) of STD_LOGIC_VECTOR(7 downto 0);
-	signal MEM_DONNEES : MEM_TAB := (1 => x"FA", others => "00000000");	
+	signal MEM_DONNEES : MEM_TAB := (others => "00000000");	
 begin
 	process 
 	begin
