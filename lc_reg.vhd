@@ -25,6 +25,7 @@ begin
 	-- sauf dans le cas d'un STORE (opcode 0x08)
 	with OPin select OPout <=
 		'0' when x"08",
+		'0' when x"00",
 		'1' when others;
 
 end Behavioral;
